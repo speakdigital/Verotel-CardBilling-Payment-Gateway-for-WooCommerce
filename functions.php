@@ -134,12 +134,12 @@ function init_CardBilling() {
 				'sig_key' => array(
 					'title'		=> 'FlexPay Signatre Key',
 					'type'		=> 'text',
-					'desc_tip'	=> 'This key is generated in your Verotel/CardBilling Control Center under FelxPay Options',
+					'desc_tip'	=> 'This key is generated in your Verotel/CardBilling Control Center under FlexPay Options',
 				),
 				'shop_id' => array(
 					'title'		=> 'Shop ID',
 					'type'		=> 'text',
-					'desc_tip'	=> 'This ID is displayed in your Verotel/CardBilling Control Center under FelxPay Options',
+					'desc_tip'	=> 'This ID is displayed in your Verotel/CardBilling Control Center under FlexPay Options',
 				),
 				'controlcenter_key' => array(
 					'title'		=> 'Control Center Key',
