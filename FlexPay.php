@@ -84,6 +84,17 @@ final class FlexPay {
         if (is_array($params) && isset($params['shopID'])) {
             $shopID = $params['shopID'];
         }
-        return new Verotel\FlexPay\Client($shopID, $secret);
+		
+		$gateway = new WC_Gateway_CardBilling();
+		$customer = $gateway->customer_id;
+		if ($customer) {
+			$brand = Verotel\FlexPay\Brand::create_from_merchant_id($customer);
+		} else {
+			$name = $gateway->which;
+			if (!$name) $name= "Verotel";
+			$brand = Verotel\FlexPay\Brand::create_from_name($name);
+		}
+		
+        return new Verotel\FlexPay\Client($shopID, $secret, $brand);
     }
 }

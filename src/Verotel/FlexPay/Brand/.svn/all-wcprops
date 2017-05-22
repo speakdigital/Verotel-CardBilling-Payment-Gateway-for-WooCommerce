@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/!svn/ver/1660262/woo-payment-gateway-verotel-cardbilling/trunk/src/Verotel/FlexPay/Brand
+END
+Base.php
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/!svn/ver/1662140/woo-payment-gateway-verotel-cardbilling/trunk/src/Verotel/FlexPay/Brand/Base.php
+END
+CardBilling.php
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/!svn/ver/1662140/woo-payment-gateway-verotel-cardbilling/trunk/src/Verotel/FlexPay/Brand/CardBilling.php
+END
+Verotel.php
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/!svn/ver/1660262/woo-payment-gateway-verotel-cardbilling/trunk/src/Verotel/FlexPay/Brand/Verotel.php
+END
+FreenomPay.php
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/!svn/ver/1662140/woo-payment-gateway-verotel-cardbilling/trunk/src/Verotel/FlexPay/Brand/FreenomPay.php
+END

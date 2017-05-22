@@ -27,3 +27,4 @@ class Brand {
         return new $brandClass();
     }
 }
+

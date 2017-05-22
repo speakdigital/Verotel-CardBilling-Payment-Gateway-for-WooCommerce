@@ -4,7 +4,8 @@ Plugin Name: Verotel / CardBilling Payment Gateway for WooCommerce + Subscriptio
 Plugin URI: http://wordpress.org/#
 Description: Use Verotel or CardBilling as a payment method with your WooCommerce store.
 Author: Speak Digital
-Version: 2.1
+Contributors: jcroucher
+Version: 2.0.3
 Author URI: http://www.speakdigital.co.uk
 Notes: 
 	John Croucher www.jcroucher.com
@@ -102,12 +103,13 @@ function init_CardBilling() {
 					'type'		=> 'checkbox',
 					'default'	=> 'no',
 				),
-				'which' => array (
+/*				'which' => array (
 					'title'		=> 'Which site are you using?',
 					'type'		=> 'select',
 					'default'	=> 'verotel',
 					'options'	=> array( 'verotel' => 'Verotel', 'cardbilling' => "CardBilling"),
 				),
+*/
 				'gateway_currency' => array (
 					'title'		=> 'Which currency do you want to send to the gateway',
 					'type'		=> 'select',
@@ -135,6 +137,11 @@ function init_CardBilling() {
 					'title'		=> 'FlexPay Signatre Key',
 					'type'		=> 'text',
 					'desc_tip'	=> 'This key is generated in your Verotel/CardBilling Control Center under FlexPay Options',
+				),
+				'customer_id' => array(
+					'title'		=> 'Customer ID',
+					'type'		=> 'text',
+					'desc_tip'	=> 'We use this to know which brand you are using (Verotel/CardBilling)',
 				),
 				'shop_id' => array(
 					'title'		=> 'Shop ID',
@@ -563,7 +570,7 @@ function init_CardBilling() {
          */
         function order_contains_subscription( $order_id ) {
 
-        	return ( wcs_is_subscription( $order_id ) || wcs_order_contains_subscription($order_id) || wcs_order_contains_renewal( $order_id ) );
+			return ( function_exists( ‘wcs_order_contains_subscription’ ) && ( wcs_order_contains_subscription( $order_id ) || wcs_is_subscription( $order_id ) || wcs_order_contains_renewal( $order_id ) ) );
         }
 
 		/**
