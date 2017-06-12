@@ -5,7 +5,7 @@ Plugin URI: http://wordpress.org/#
 Description: Use Verotel or CardBilling as a payment method with your WooCommerce store.
 Author: Speak Digital
 Contributors: jcroucher
-Version: 2.0.3
+Version: 2.0.4
 Author URI: http://www.speakdigital.co.uk
 Notes: 
 	John Croucher www.jcroucher.com
@@ -208,16 +208,16 @@ function init_CardBilling() {
 
 			// Basic params for the gateway
 			$params = array(
-				'shopID' => $this->shop_id,
-				'priceAmount' => $order->order_total,
-				'priceCurrency' =>  $this->gateway_currency,
-				'description' => 'Order '.$order->id,
-				'referenceID' => $order->id,
-				'email' => $order->billing_email,
-				'origin' => 'WooCommerce',
-//				'custom1' => 'Custom 1',
-//            	'custom3' => 'Custom 3',
-            	'type' => 'purchase',
+				'shopID'        => $this->shop_id,
+				'priceAmount'   => $order->order_total,
+				'priceCurrency' => $this->gateway_currency,
+				'description'   => 'Order '.$order->id,
+				'referenceID'   => $order->id,
+				'email'         => $order->billing_email,
+				'origin'        => 'WooCommerce',
+//				'custom1'       => 'Custom 1',
+//            	'custom3'       => 'Custom 3',
+            	'type'          => 'purchase',
 			);
 			
 
@@ -248,6 +248,8 @@ function init_CardBilling() {
 	     * @param string $subscription_key
 	     */
 		function cancel_subscription( $user_id, $subscription_key ) {
+			
+			$params = $_REQUEST;
 
 			$splitKey = explode('_',$subscription_key);
 
@@ -406,7 +408,7 @@ function init_CardBilling() {
 			  			{
 			  				case 'initial':
 			  				case 'rebill': // Gateway has sent a subscription renewal request
-			  					$response = $this->gateway_subscription_payment($order);
+			  					$response = $this->gateway_subscription_payment($order,$eventAction);
 			  					break;
 
 			  				case 'chargeback':
@@ -448,22 +450,27 @@ function init_CardBilling() {
 	     * The gateway has said it is about to process the users renewal, so we need to update the details on our end.
 	     *
 	     * @param WC_Order $order
+		 * @return boolean
 	     */
-		public function gateway_subscription_payment( $order ) {
+		public function gateway_subscription_payment( $order, $eventAction ) {
 
 			// Make sure the order requested is a subscription, or contains a subscription.
-			if ( $this->order_contains_subscription( $order->id ) ) /*&& !$order->has_status( wcs_get_subscription_ended_statuses() )*/ 
+			if ( $this->order_contains_subscription( $order->id ) ) /*&& !$order->has_status( wcs_get_subscription_ended_statuses() )*/
 			{
 
 				$order->update_status( 'on-hold' );
 
 				// generate a renewal order as normal
-				$renewal_order = wcs_create_renewal_order( $order );
-				$renewal_order->set_payment_method( $order->payment_gateway );
-
-				// Update the renewal order status to completed
-				// This also makes the subscription active
-				$renewal_order->update_status('completed');
+				
+				if( $eventAction != 'initial')
+				{
+					$renewal_order = wcs_create_renewal_order( $order );
+					$renewal_order->set_payment_method( $order->payment_gateway );
+					
+					// Update the renewal order status to completed
+					// This also makes the subscription active
+					$renewal_order->update_status('completed');
+				}
 
 				// Add a custom note for logging
 				$order->add_order_note( __( 'Create and complete renewal order requested by gateway.', 'woocommerce-subscriptions' ), false, true );
@@ -499,7 +506,9 @@ function init_CardBilling() {
 	    }
 
 		function verify_verotel_sale() // NOT COMPLETE
-		{	
+		{
+			$params = $_REQUEST;
+			
 			//now check with Verotel and get full data
 			$statusparams = array();
 			$statusparams['shopID'] = $this->shop_id;
@@ -570,7 +579,7 @@ function init_CardBilling() {
          */
         function order_contains_subscription( $order_id ) {
 
-			return ( function_exists( ‘wcs_order_contains_subscription’ ) && ( wcs_order_contains_subscription( $order_id ) || wcs_is_subscription( $order_id ) || wcs_order_contains_renewal( $order_id ) ) );
+			return ( function_exists( 'wcs_order_contains_subscription' ) && ( wcs_order_contains_subscription( $order_id ) || wcs_is_subscription( $order_id ) || wcs_order_contains_renewal( $order_id ) ) );
         }
 
 		/**
